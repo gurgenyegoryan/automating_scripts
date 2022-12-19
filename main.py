@@ -12,11 +12,12 @@ ns_ip = '192.168.4.101'
 def up_hosts():
     ipaddress_list = []
 
-    for ip in ipaddress.IPv4Network('192.168.4.145/32'):
+    for ip in ipaddress.IPv4Network('192.168.4.0/32'):
         status, result = subprocess.getstatusoutput("ping -c1 -w2 " + str(ip))  # for linux
         # status, result = subprocess.getstatusoutput("ping -n 1  " + str(ip))  # for windows
         if status == 0:
             ipaddress_list.append(ip)
+    ipaddress_list.remove('192.168.4.101')
     return ipaddress_list
 
 

@@ -15,9 +15,9 @@ def up_hosts():
     ipaddress_list = []
 
     for ip in ipaddress.IPv4Network('192.168.4.0/24'):
-        status, result = subprocess.getstatusoutput("ping -c1 -w2 " + str(ip))
+        status, result = subprocess.getstatusoutput("timeout 0.2 ping -c1 " + str(ip))
         if status == 0:
-            ipaddress_list.append(ip)
+            ipaddress_list.append(str(ip))
     ipaddress_list.remove('192.168.4.101')
     return ipaddress_list
 
@@ -25,20 +25,24 @@ def up_hosts():
 def get_hostname(user_pass, user_name):
     addresses = up_hosts()
     for ip in addresses:
+        print(ip)
         try:
-            cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} uname -n"
-            cmd2 = "sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s /sbin/ifconfig tun0 | grep " \
+            cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} -o LogLevel=ERROR uname -n"
+            cmd2 = "sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s -o LogLevel=ERROR /sbin/ifconfig tun0 | grep " \
                    "netmask | awk '{print $2}'" % (
-                       user_pass, user_name, ip)
+                       user_pass, user_name, str(ip))
 
             hostname = subprocess.getoutput(cmd1)
             vpn_ip = subprocess.getoutput(cmd2)
-            create_host_file(hostname, ip, vpn_ip)
-            append_global_zone(hostname)
 
-        except ConnectionError as e:
+        except PermissionError as e:
             print(f"Can't connect to {ip} host: {e}")
             sys.exit(1)
+
+        finally:
+            create_host_file(hostname, ip, vpn_ip)
+            append_global_zone(hostname)
+            print(f"{hostname} db file created")
 
 
 def create_host_file(hostname, ip, vpn_ip):

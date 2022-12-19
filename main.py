@@ -13,8 +13,7 @@ def up_hosts():
     ipaddress_list = []
 
     for ip in ipaddress.IPv4Network('192.168.4.0/32'):
-        status, result = subprocess.getstatusoutput("ping -c1 -w2 " + str(ip))  # for linux
-        # status, result = subprocess.getstatusoutput("ping -n 1  " + str(ip))  # for windows
+        status, result = subprocess.getstatusoutput("ping -c1 -w2 " + str(ip))
         if status == 0:
             ipaddress_list.append(ip)
     ipaddress_list.remove('192.168.4.101')
@@ -36,7 +35,7 @@ def get_hostname(user_pass, user_name):
             append_global_zone(hostname)
 
         except ConnectionError as e:
-            print(f"Can't connect to {ip}: {e}")
+            print(f"Can't connect to {ip} host: {e}")
             sys.exit(1)
 
 

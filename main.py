@@ -6,6 +6,7 @@ import ipaddress
 us_pass = 'sugg'
 user = 'suguest'
 file_rfc = '/etc/named/named.rfc1912.zones'
+ns_ip = '192.168.4.101'
 
 
 def up_hosts():
@@ -39,18 +40,19 @@ def get_hostname(user_pass, user_name):
 
 
 def create_host_file(hostname, ip, vpn_ip):
+    global ns_ip
     host_db_file = "$TTL 1D\n" \
-                  f"$ORIGIN {hostname}.\n" \
-                  "@       IN      SOA     ns1.ngn.am      root.ngn.am. (\n" \
-                  "                                            0      ; serial\n" \
-                  "                                            1D     ; refresh\n" \
-                  "                                            1H     ; retry\n" \
-                  "                                            1W     ; expire\n" \
-                  "                                            3H )   ; minimum\n" \
-                  "@       IN      NS      {ns1.ngn.am.}\n" \
-                  f"@       IN      A       {ip}\n" \
-                  f"@	    IN	    A	    {vpn_ip}\n" \
-                  f"www     IN      A       {ip}\n\n"
+                   f"$ORIGIN {hostname}.\n" \
+                   f"@       IN      SOA     {ns_ip}     root.{ns_ip}. (\n" \
+                   "                                            0      ; serial\n" \
+                   "                                            1D     ; refresh\n" \
+                   "                                            1H     ; retry\n" \
+                   "                                            1W     ; expire\n" \
+                   "                                            3H )   ; minimum\n" \
+                   f"@       IN      NS       {ns_ip}.\n" \
+                   f"@       IN      A        {ip}\n" \
+                   f"@	     IN	     A	      {vpn_ip}\n" \
+                   f"www     IN      A        {ip}\n\n"
 
     hostname_file = f"/etc/named/{hostname}.db"
     with open(hostname_file, "w") as f:

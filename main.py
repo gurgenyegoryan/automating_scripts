@@ -5,14 +5,16 @@ import ipaddress
 
 us_pass = 'sugg'
 user = 'suguest'
-file_rfc = '/etc/named/named.rfc1912.zones'
+
 ns_ip = '192.168.4.101'
+ns_path = '/etc/bind/'
+file_rfc = ns_path + 'named.rfc1912.zones'
 
 
 def up_hosts():
     ipaddress_list = []
 
-    for ip in ipaddress.IPv4Network('192.168.4.0/32'):
+    for ip in ipaddress.IPv4Network('192.168.4.0/24'):
         status, result = subprocess.getstatusoutput("ping -c1 -w2 " + str(ip))
         if status == 0:
             ipaddress_list.append(ip)
@@ -51,10 +53,10 @@ def create_host_file(hostname, ip, vpn_ip):
                    "                                            3H )   ; minimum\n" \
                    f"@       IN      NS       {ns_ip}.\n" \
                    f"@       IN      A        {ip}\n" \
-                   f"@	     IN	     A	      {vpn_ip}\n" \
+                   f"@       IN       A        {vpn_ip}\n" \
                    f"www     IN      A        {ip}\n\n"
 
-    hostname_file = f"/etc/named/{hostname}.db"
+    hostname_file = f"{ns_path}{hostname}.db"
     with open(hostname_file, "w") as f:
         f.write(host_db_file)
 

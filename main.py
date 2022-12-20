@@ -67,6 +67,12 @@ def get_hostname(user_pass, user_name):
 
             hostname = subprocess.getoutput(cmd1)
             vpn_ip = subprocess.getoutput(cmd2)
+
+        except Exception as e:
+            print(f"Can't connect to {ip} host: {e}")
+            sys.exit(1)
+
+        finally:
             if ' ' in hostname:
                 print(f"Can't connect to host {ip}: {hostname}")
                 continue
@@ -76,10 +82,6 @@ def get_hostname(user_pass, user_name):
             else:
                 create_host_file(hostname, ip, vpn_ip)
                 append_global_zone(hostname)
-
-        except ConnectionAbortedError as e:
-            print(f"Can't connect to {ip} host: {e}")
-            sys.exit(1)
 
 
 get_hostname(us_pass, user)

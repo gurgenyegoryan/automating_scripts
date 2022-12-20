@@ -60,8 +60,8 @@ def get_hostname(user_pass, user_name):
     addresses = up_hosts()
     for ip in addresses:
         try:
-            cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} -o LogLevel=ERROR uname -n"
-            cmd2 = "sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s -o LogLevel=ERROR /sbin/ifconfig tun0 | grep " \
+            cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} uname -n"
+            cmd2 = "sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s /sbin/ifconfig tun0 | grep " \
                    "netmask | awk '{print $2}'" % (
                        user_pass, user_name, str(ip))
 
@@ -77,7 +77,8 @@ def get_hostname(user_pass, user_name):
                 print(f"Can't connect to host {ip}: {hostname}")
                 continue
             elif hostname == '':
-                print(f"In {ip} dont set hostname: {hostname}")
+                test = subprocess.SubprocessError()
+                print(f"In {ip} dont set hostname: {test}")
                 continue
             else:
                 create_host_file(hostname, ip, vpn_ip)

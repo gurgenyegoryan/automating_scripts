@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # save kernel verion in file and load in variable
-kern_version_old=`cat /root/var`
+kernel_version_path=$HOME/.config/kernel_version
+kern_version_old=cat $kernel_version_path
 
 
 # Check if version change, uninstall and install mlnx_ofed and rewrite kernel version file with current version
-if [ `uname -r` != "$kern_version" ]; then
+if [ uname -r != "$kern_version" ]; then
     cd /tmp &&
     wget https://content.mellanox.com/ofed/MLNX_OFED-5.8-1.0.1.1/MLNX_OFED_LINUX-5.8-1.0.1.1-ubuntu22.04-x86_64.iso &&
     mkdir -p mlnx &&
@@ -13,7 +14,7 @@ if [ `uname -r` != "$kern_version" ]; then
     ./mlnx/uninstall.sh --force &&
     ./mlnx/mlnxofedinstall --without-dkms --add-kernel-support --kernel $(uname -r) --without-fw-update --force &&
     /etc/init.d/openibd restart
-    echo `uname -r` > /root/var
+    echo uname -r > $kernel_version_path
 fi
 
 # Set in crontab this script and it be run after restart:

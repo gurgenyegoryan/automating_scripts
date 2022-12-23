@@ -58,6 +58,7 @@ def append_global_zone(hostname):
 
 def get_hostname(user_pass, user_name):
     addresses = up_hosts()
+    hostname_list = []
     for ip in addresses:
         try:
             cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} uname -n"
@@ -76,13 +77,19 @@ def get_hostname(user_pass, user_name):
             if ' ' in hostname:
                 print(f"Can't connect to host {ip}: {hostname}")
                 continue
+
             elif hostname == '':
                 test = subprocess.SubprocessError()
                 print(f"In {ip} dont set hostname: {test}")
                 continue
+
+            elif hostname in hostname_list:
+                continue
+
             else:
                 create_host_file(hostname, ip, vpn_ip)
                 append_global_zone(hostname)
+        hostname_list.append(hostname)
 
 
 get_hostname(us_pass, user)

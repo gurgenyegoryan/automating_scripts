@@ -3,6 +3,8 @@ import sys
 import subprocess
 import ipaddress
 
+from tqdm import tqdm
+
 us_pass = 'sugg'
 user = 'suguest'
 
@@ -12,13 +14,17 @@ file_rfc = ns_path + 'named.rfc1912.zones'
 
 
 def up_hosts():
+    global ns_ip
     ipaddress_list = []
-    print("Start searching for active ip addresses")
-    for ip in ipaddress.IPv4Network('192.168.4.0/24'):
+    for ip in tqdm(ipaddress.IPv4Network('192.168.4.0/24'), desc="Start searching for active ip addresses"):
         status, result = subprocess.getstatusoutput("timeout 0.2 ping -c1 " + str(ip))
         if status == 0:
             ipaddress_list.append(str(ip))
-    ipaddress_list.remove('192.168.4.101')
+    try:
+        ipaddress_list.remove(ns_ip)
+        print("Remove ns_ip from list")
+    except ValueError as e:
+        print("Cant find ns_ip in list")
     print("Active ip addresses founded")
     return ipaddress_list
 
@@ -59,7 +65,7 @@ def append_global_zone(hostname):
 def get_hostname(user_pass, user_name):
     addresses = up_hosts()
     hostname_list = []
-    for ip in addresses:
+    for ip in tqdm(addresses, desc="Trying connect to hosts and get hostname/vpn_ip"):
         try:
             cmd1 = f"sshpass -p {user_pass} ssh -o StrictHostKeyChecking=no {user_name}@{ip} uname -n"
             cmd2 = "sshpass -p %s ssh -o StrictHostKeyChecking=no %s@%s /sbin/ifconfig tun0 | grep " \
@@ -89,6 +95,7 @@ def get_hostname(user_pass, user_name):
             else:
                 create_host_file(hostname, ip, vpn_ip)
                 append_global_zone(hostname)
+                print(f"Connect and get hostname/vpn_ip from {ip} host")
         hostname_list.append(hostname)
 
 

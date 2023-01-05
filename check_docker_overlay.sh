@@ -3,7 +3,7 @@ SIZE="40"
 
 
 # check the current size
-CHECK="`du -sh test/ | cut -f1`"
+CHECK="`du -sh /var/lib/docker/overlay2/ | cut -f1`"
 echo "Current Foldersize: $CHECK GB"
 
 # Get last character

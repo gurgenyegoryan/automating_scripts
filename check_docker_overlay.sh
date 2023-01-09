@@ -30,7 +30,7 @@ do
         continue
     elif [ $CHECK -ge $LIMIT ];then
         echo "Start prune docker"
-        docker system prune -a --volumes
+        docker image prune --all --force
         /usr/bin/sleep 3600
     else
         echo "Its other error"

@@ -2,6 +2,11 @@
 
 read -p "Enter what you want build(UMEM,ROCKSDB): " ENGINE
 
+if [ "$ENGINE" != "ROCKSDB" ] || [ "$ENGINE" != "UMEM" ]; then
+    echo "Unknown engine: $ENGINE"
+    exit 1
+fi
+
 engine=$(echo $ENGINE | tr '[:upper:]' '[:lower:]') # make ENGINE variable lower case
 
 echo $engine

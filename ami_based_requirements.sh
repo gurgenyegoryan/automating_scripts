@@ -34,11 +34,9 @@ fi
 # Securely remove history files
 if [[ -f ~/.bash_history ]]; then
     shred -u ~/.bash_history
+    echo "Remove root history file"
 fi
 
-if [[ -f ~/.zsh_history ]]; then
-    shred -u ~/.zsh_history
-fi
 
 history -c
 echo "Shell history cleared"
@@ -57,7 +55,6 @@ fi
 
 # Lock root user account
 passwd -l root
-echo "Root account locked"
 
 if [[ -f ~/.ssh/authorized_keys ]]; then
     echo > ~/.ssh/authorized_keys
@@ -76,19 +73,12 @@ fi
 # Securely remove history files
 if [[ -f /home/ubuntu/.bash_history ]]; then
     shred -u /home/ubuntu/.bash_history
-fi
-
-if [[ -f /home/ubuntu/.zsh_history ]]; then
-    shred -u /home/ubuntu/.zsh_history
-    echo "Shell history cleared"
+    echo "Remove ubuntu user history file"
 fi
 
 
 # After this delete all script that not needing, and delete history
 # do this manual and check all
 
-
-
-# rm -Rf ami_based_requirements.sh
-# rm -Rf ukv/
+# rm -Rf /home/ubuntu/*
 # history -c

@@ -1,15 +1,12 @@
-
 #!/bin/bash
 
 # Specify the text to add
 cloud_config='/etc/cloud/cloud.cfg'
 new_text='chpasswd:
-users:
-- name: root
-password: $(openssl rand -base64 8)
-- name: ubuntu
-password: $(openssl rand -base64 8)
-expire: False'
+  list: |
+    root:$(openssl rand -base64 8)
+    ubuntu:$(openssl rand -base64 8)
+  expire: False'
 
 # Find the line number of the first "users" line
 users_line=$(grep -n "^\s*-\s*default$" "$cloud_config" | cut -d':' -f1)
@@ -30,14 +27,11 @@ if [[ -f ~/.ssh/authorized_keys ]]; then
     echo > ~/.ssh/authorized_keys
     echo "Authorized keys file cleared"
 fi
-
 # Securely remove history files
 if [[ -f ~/.bash_history ]]; then
     shred -u ~/.bash_history
     echo "Remove root history file"
 fi
-
-
 history -c
 echo "Shell history cleared"
 EOF
@@ -62,12 +56,12 @@ if [[ -f ~/.ssh/authorized_keys ]]; then
 fi
 
 # Securely remove SSH keys
-if [[ -f /etc/ssh/*_key ]]; then
-    sudo shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
-    echo "SSH keys securely removed"
-else
-    echo "No SSH keys found, skipping"
-fi
+#if [[ -f /etc/ssh/*_key* ]]; then
+sudo shred -u /etc/ssh/*_key /etc/ssh/*_key.pub
+echo "SSH keys securely removed"
+#else
+#    echo "No SSH keys found, skipping"
+#fi
 
 
 # Securely remove history files
@@ -75,10 +69,5 @@ if [[ -f /home/ubuntu/.bash_history ]]; then
     shred -u /home/ubuntu/.bash_history
     echo "Remove ubuntu user history file"
 fi
-
-
-# After this delete all script that not needing, and delete history
-# do this manual and check all
-
-# rm -Rf /home/ubuntu/*
-# history -c
+history -c && history -w   # Clear command history
+rm -Rf *

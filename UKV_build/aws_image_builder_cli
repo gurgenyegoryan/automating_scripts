@@ -33,10 +33,10 @@ aws imagebuilder create-infrastructure-configuration \
 
 # Create distribution for pipeline
 aws imagebuilder create-distribution-configuration \
-    --name "ukv-dist" \
-    --description "Ukv UMEM distribution configuration for x86" \
-    --distributions "region": "us-east-2", "amiDistributionConfiguration": { "name": "ukv-umem", "description": "Umem distribution configuration", "targetAccountIds": [ "123456789012" ], "amiTags": { "name": "ukv-umem" } } \
-    --region us-east-2
+--name "ukv-dist" \
+--description "Ukv UMEM distribution configuration for x86" \
+--distributions '{"region": "eu-west-1", "amiDistributionConfiguration": { "name": "ukv-umem-{{ imagebuilder:buildDate }}", "description": "Umem distribution configuration", "targetAccountIds": [ "123456789012" ], "amiTags": { "name": "ukv-umem" } } }' \
+--region eu-west-1
 
 # Create pipeline
 aws imagebuilder create-image-pipeline \
@@ -47,6 +47,10 @@ aws imagebuilder create-image-pipeline \
 --distribution-configuration-arn arn:aws:imagebuilder:us-east-2:495295622846:distribution-configuration/ukv-dist \
 --status ENABLED \
 --region us-east-2
+
+# Run pipeline
+aws imagebuilder start-image-pipeline-execution \
+    --image-pipeline-arn arn:aws:imagebuilder:us-west-2:123456789012:image-pipeline/mywindows2016pipeline
 
 # Update pipeline must create new version recipe and to this
 

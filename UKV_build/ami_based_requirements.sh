@@ -38,8 +38,8 @@ EOF
 
 
 # Move sshd_config file and secure it
-if [[ -f sshd_config ]]; then
-    mv sshd_config /etc/ssh/sshd_config
+if [[ -f /home/ubuntu/automating_scripts/UKV_build/sshd_config ]]; then
+    mv /home/ubuntu/automating_scripts/UKV_build/sshd_config /etc/ssh/sshd_config
     echo "New sshd_config file moved to /etc/ssh/"
     chown root:root /etc/ssh/sshd_config
     chmod 600 /etc/ssh/sshd_config
@@ -69,5 +69,5 @@ if [[ -f /home/ubuntu/.bash_history ]]; then
     shred -u /home/ubuntu/.bash_history
     echo "Remove ubuntu user history file"
 fi
-history -c && history -w   # Clear command history
-rm -Rf *
+
+rm -Rf /home/ubuntu/*

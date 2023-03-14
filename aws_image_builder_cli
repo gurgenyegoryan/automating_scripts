@@ -47,3 +47,13 @@ aws imagebuilder create-image-pipeline \
 --distribution-configuration-arn arn:aws:imagebuilder:us-east-2:495295622846:distribution-configuration/ukv-dist \
 --status ENABLED \
 --region us-east-2
+
+# Update pipeline must create new version recipe and to this
+
+aws imagebuilder update-image-pipeline \
+--image-pipeline-arn arn:aws:imagebuilder:us-east-2:495295622846:image-pipeline/ukv-test \
+--image-recipe-arn arn:aws:imagebuilder:us-east-2:495295622846:image-recipe/ukv-umem-recipe/1.0.1 \
+--infrastructure-configuration-arn arn:aws:imagebuilder:us-east-2:495295622846:infrastructure-configuration/ukv-infrastructure \
+--description "This is my updated pipeline description." \
+--status ENABLED \
+--region us-east-2

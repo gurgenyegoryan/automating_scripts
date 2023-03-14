@@ -35,7 +35,7 @@ aws imagebuilder create-infrastructure-configuration \
 aws imagebuilder create-distribution-configuration \
 --name "ukv-dist-new" \
 --description "Ukv UMEM distribution configuration for x86" \
---distributions '{"region": "eu-west-1", "amiDistributionConfiguration": { "name": "ukv-umem-{{ imagebuilder:buildDate }}", "description": "Umem distribution configuration", "amiTags": { "name": "ukv-umem" } } }' \
+--distributions '{"region": "eu-west-1", "amiDistributionConfiguration": { "name": "ukv-umem-{{ imagebuilder:buildDate }}", "description": "This will be show in final ami description", "amiTags": { "name": "ukv-umem" } } }' \
 --region eu-west-1
 
 # Create pipeline

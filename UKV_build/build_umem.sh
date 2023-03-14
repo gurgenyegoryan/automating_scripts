@@ -1,11 +1,6 @@
 #!/bin/bash
 
-read -p "Enter what you want build(UMEM,ROCKSDB): " ENGINE
-
-if [ "$ENGINE" != "ROCKSDB" ] && [ "$ENGINE" != "UMEM" ]; then
-    echo "Unknown engine: $ENGINE"
-    exit 1
-fi
+ENGINE="UMEM"
 
 engine=$(echo $ENGINE | tr '[:upper:]' '[:lower:]') # make ENGINE variable lower case
 
@@ -19,27 +14,6 @@ git clone https://github.com/unum-cloud/ukv.git && cd ./ukv
 
 cmake -DUKV_BUILD_TESTS=0 -DUKV_BUILD_BENCHMARKS=0 -DUKV_BUILD_ENGINE_${ENGINE}=1 -DUKV_BUILD_API_FLIGHT_CLIENT=0 -DUKV_BUILD_API_FLIGHT_SERVER=1 . && make -j8 ukv_flight_server_${engine}
 
-if [ $ENGINE = "ROCKSDB" ]; then
-sudo tee /etc/systemd/system/ukv_flight_server_rocksdb.service > /dev/null <<EOF
-[Unit]
-Description=UKV Flight Server RocksDB Service
-
-[Service]
-ExecStart=/var/lib/ukv/rocksdb/ukv_flight_server_rocksdb
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-EOF
-cd
-sudo mkdir -p /var/lib/ukv/rocksdb/
-sudo mv /home/ubuntu/ukv/build/bin/ukv_flight_server_rocksdb /var/lib/ukv/rocksdb/
-sudo chown root:root /var/lib/ukv/rocksdb/ukv_flight_server_rocksdb
-sudo systemctl daemon-reload
-sudo systemctl enable ukv_flight_server_rocksdb.service
-sudo systemctl start ukv_flight_server_rocksdb.service
-rm -Rf ukv/
-elif [ $ENGINE = "UMEM" ]; then
 sudo tee /etc/systemd/system/ukv_flight_server_umem.service > /dev/null <<EOF
 [Unit]
 Description=UKV Flight Server UMEM Service
@@ -51,14 +25,13 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+
 sudo mv /home/ubuntu/ukv/build/bin/ukv_flight_server_umem /usr/bin
 sudo chown root:root /usr/bin/ukv_flight_server_umem
 sudo systemctl daemon-reload
 sudo systemctl enable ukv_flight_server_umem.service
 sudo systemctl start ukv_flight_server_umem.service
-rm -Rf ukv/
-else
-echo "Wrong Engine"
-fi
+
+
 
 

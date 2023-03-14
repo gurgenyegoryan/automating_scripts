@@ -3,10 +3,10 @@
 # Specify the text to add
 cloud_config='/etc/cloud/cloud.cfg'
 new_text='chpasswd:
-  list: |
-    root:$(openssl rand -base64 8)
-    ubuntu:$(openssl rand -base64 8)
-  expire: False'
+list: |
+root:$(openssl rand -base64 8)
+ubuntu:$(openssl rand -base64 8)
+expire: False'
 
 # Find the line number of the first "users" line
 users_line=$(grep -n "^\s*-\s*default$" "$cloud_config" | cut -d':' -f1)

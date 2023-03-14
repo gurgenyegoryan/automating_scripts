@@ -1,0 +1,33 @@
+name: MyUkvComponent
+description: Install and build UKV
+
+schemaVersion: 1.0
+
+phases:
+  - name: build
+    steps:
+      - name: UpdateApt
+        action: ExecuteBash
+        inputs:
+          commands:
+            - >
+              git config --global http.sslVerify "false";
+              git clone https://github.com/gurgenyegoryan/umem-script.git umem-script/
+
+      - name: ExecuteUmemScript
+        action: ExecuteBash
+        inputs:
+          commands:
+            - cd umem-script/ && chmod +x umem.sh && ./umem.sh
+
+      - name: Executeamireq
+        action: ExecuteBash
+        inputs:
+          commands:
+            - cd umem-script/ && chmod +x ami_req.sh && ./ami_req.sh
+
+      - name: InstallDependencies
+        action: ExecuteBash
+        inputs:
+          commands:
+            - history -c

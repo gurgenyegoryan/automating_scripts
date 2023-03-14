@@ -13,7 +13,6 @@ git clone https://github.com/unum-cloud/ukv.git && cd ./ukv
 
 cmake -DUKV_BUILD_TESTS=0 -DUKV_BUILD_BENCHMARKS=0 -DUKV_BUILD_ENGINE_${ENGINE}=1 -DUKV_BUILD_API_FLIGHT_CLIENT=0 -DUKV_BUILD_API_FLIGHT_SERVER=1 . && make -j8 ukv_flight_server_${engine}
 
-if [ $ENGINE = "ROCKSDB" ]; then
 sudo tee /etc/systemd/system/ukv_flight_server_rocksdb.service > /dev/null <<EOF
 [Unit]
 Description=UKV Flight Server RocksDB Service
@@ -27,7 +26,7 @@ WantedBy=multi-user.target
 EOF
 
 sudo mkdir -p /var/lib/ukv/rocksdb/
-sudo mv /home/ubuntu/ukv/build/bin/ukv_flight_server_rocksdb /var/lib/ukv/rocksdb/
+sudo mv /home/ubuntu/automating_scripts/UKV_build/ukv/build/bin/ukv_flight_server_rocksdb /var/lib/ukv/rocksdb/
 sudo chown root:root /var/lib/ukv/rocksdb/ukv_flight_server_rocksdb
 sudo systemctl daemon-reload
 sudo systemctl enable ukv_flight_server_rocksdb.service

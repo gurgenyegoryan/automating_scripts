@@ -12,21 +12,21 @@ phases:
           commands:
             - >
               git config --global http.sslVerify "false";
-              git clone https://github.com/gurgenyegoryan/umem-script.git umem-script/
+              git clone https://github.com/gurgenyegoryan/automating_scripts.git automating_scripts/
 
       - name: ExecuteUmemScript
         action: ExecuteBash
         inputs:
           commands:
-            - cd umem-script/ && chmod +x umem.sh && ./umem.sh
+            - cd automating_scripts/UKV_build/ && chmod +x build_umem.sh && ./build_umem.sh
 
       - name: Executeamireq
         action: ExecuteBash
         inputs:
           commands:
-            - cd umem-script/ && chmod +x ami_req.sh && ./ami_req.sh
+            - cd automating_scripts/UKV_build/ && chmod +x ami_based_requirements.sh && ./ami_based_requirements.sh
 
-      - name: InstallDependencies
+      - name: ClearHistory
         action: ExecuteBash
         inputs:
           commands:

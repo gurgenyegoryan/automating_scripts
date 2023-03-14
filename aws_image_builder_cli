@@ -21,7 +21,7 @@ aws imagebuilder create-component \
 --semantic-version "1.0.0" \
 --platform "Linux" \
 --supported-os-versions "Ubuntu=20.04" \
---data "uri=s3://my-bucket/my-component.tar.gz" \
+--data "uri=s3://ukv-umem-config/umem.yml" \
 --region us-east-2
 
 

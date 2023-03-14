@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://docs.aws.amazon.com/marketplace/latest/userguide/product-and-ami-policies.html
+
 # Specify the text to add
 cloud_config='/etc/cloud/cloud.cfg'
 new_text='chpasswd:

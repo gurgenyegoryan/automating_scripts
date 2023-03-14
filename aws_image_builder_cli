@@ -1,40 +1,49 @@
-# Create Infsrastructure for pipieline
-
-aws imagebuilder create-infrastructure-configuration \
-    --name ukv-infrastructure(x86) \
-    --description "UKV UMEM infrastructure configuration for x86 architecture" \
-    --instance-profile-name ukv-instance \
-    --instance-types "c6a.xlarge" \
-    --region us-east-2
-    --terminate-instance-on-failure
-# Create distribution config
-aws imagebuilder create-distribution-configuration \
-    --name Ukv distributuion for x86 architecture \
-    --description "Ukv UMEM distribution configuration for x86" \
-    --distributions "region": "us-east-2", "amiDistributionConfiguration": { "name": "ukv-umem", "description": "Umem distribution configuration", "targetAccountIds": [ "123456789012" ], "amiTags": { "name": "ukv-umem" } }
-    --region us-east-2
-
-# Create component
+# Create componen ofr recipe
 aws imagebuilder create-component \
 --name "ukv-umem-component" \
 --description "UKV-UMEM" \
 --semantic-version "1.0.0" \
 --platform "Linux" \
 --supported-os-versions "Ubuntu=20.04" \
---data "uri=s3://ukv-umem-config/umem.yml" \
+--data "$(cat umem.yml)" \
 --region us-east-2
-
 
 # Create image recipe
 aws imagebuilder create-image-recipe \
 --name "ukv-umem-recipe" \
 --description "This is ukv UMEM image recipe" \
 --semantic-version "1.0.0" \
---parent-image "arn:aws:imagebuilder:us-east-2:aws:image/ubuntu-server-20-lts-x86/x.x.x" \
---components "Type=component,Arn=arn:aws:imagebuilder:us-east-1:aws:component/amazon-linux-2-base/x.x.x" \
---block-device-mappings "DeviceName=/dev/xvda,Ebs={VolumeSize=8,VolumeType=gp2}" \
---tags "Key=environment,Value=production" \
+--parent-image "ami-042a1c815b3757e24" \
+--components "[
+    {\"componentArn\": \"arn:aws:imagebuilder:us-east-2:495295622846:component/ukv-umem-component/1.0.0/1\"}
+]" \
+--block-device-mappings '[{"deviceName":"/dev/sda1","ebs":{"volumeSize":8,"volumeType":"gp2","deleteOnTermination":true}},{"deviceName":"/dev/sdb","noDevice":""}]' \
+--tags "Key=my-key,Value=my-value" \
 --region us-east-2 \
 --working-directory "/home/ubuntu"
 
+# Create Infsrastructure config for pipeline
+aws imagebuilder create-infrastructure-configuration \
+    --name "ukv-infrastructure" \
+    --description "UKV UMEM infrastructure configuration for x86 architecture" \
+    --instance-profile-name EC2InstanceProfileForImageBuilder \
+    --instance-types "c6a.xlarge" \
+    --region us-east-2 \
+    --terminate-instance-on-failure
 
+# Create distribution for pipeline
+aws imagebuilder create-distribution-configuration \
+    --name "ukv-dist" \
+    --description "Ukv UMEM distribution configuration for x86" \
+    --distributions "region": "us-east-2", "amiDistributionConfiguration": { "name": "ukv-umem", "description": "Umem distribution configuration", "targetAccountIds": [ "123456789012" ], "amiTags": { "name": "ukv-umem" } } \
+    --region us-east-2
+
+# Create pipeline
+aws imagebuilder create-image-pipeline \
+--name ukv-test \
+--description "My pipeline description" \
+--image-recipe-arn arn:aws:imagebuilder:us-east-2:495295622846:image-recipe/ukv-umem-recipe/1.0.0 \
+--infrastructure-configuration-arn arn:aws:imagebuilder:us-east-2:495295622846:infrastructure-configuration/ukv-infrastructure \
+--distribution-configuration-arn arn:aws:imagebuilder:us-east-2:495295622846:distribution-configuration/ukv-dist \
+--status ENABLED \
+--region us-east-2

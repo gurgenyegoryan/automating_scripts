@@ -26,7 +26,7 @@ Restart=always
 WantedBy=multi-user.target
 EOF
 
-sudo mv /home/ubuntu/automating_scripts/ukv/build/bin/ukv_flight_server_umem /usr/bin
+sudo mv /home/ubuntu/automating_scripts/UKV_build/ukv/build/bin/ukv_flight_server_umem /usr/bin
 sudo chown root:root /usr/bin/ukv_flight_server_umem
 sudo systemctl daemon-reload
 sudo systemctl enable ukv_flight_server_umem.service

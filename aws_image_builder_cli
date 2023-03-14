@@ -1,0 +1,16 @@
+# Create Infsrastructure for pipieline
+
+aws imagebuilder create-infrastructure-configuration \
+    --name ukv-infrastructure(x86) \
+    --description "UKV UMEM infrastructure configuration for x86 architecture" \
+    --instance-profile-name ukv-instance \
+    --instance-types "c6a.xlarge" \
+    --region us-east-2
+    --terminate-instance-on-failure
+# Create distribution config
+aws imagebuilder create-distribution-configuration \
+    --name Ukv distributuion for x86 architecture \
+    --description "Ukv UMEM distribution configuration for x86" \
+    --distributions "region": "us-east-2", "amiDistributionConfiguration": { "name": "my-ami-distribution", "description": "My AMI distribution configuration", "targetAccountIds": [ "123456789012" ], "amiTags": { "mytag": "tagvalue" } }
+    --region us-east-2
+

@@ -9,6 +9,9 @@ aws ec2 create-image \
 --name "ukv-umem(arm)" \
 --block-device-mappings '[{"DeviceName":"/dev/sda1","Ebs":{"DeleteOnTermination":true}},{"DeviceName":"/dev/sdb","NoDevice":""},{"DeviceName":"/dev/sdc","NoDevice":""}]'
 
+# Get ami status
+aws ec2 describe-images --image-ids ami-0a59ee7ab97aaabeb --query 'Images[].State' --output json
+
 # Create Folder in bucket
 aws s3api put-object --bucket unum-cloud-wiki --key FolderNameInS3/ --acl bucket-owner-full-control --content-length 0
 # Cp local folder

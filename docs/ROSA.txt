@@ -1,0 +1,1 @@
+https://console.redhat.com/openshift/create/rosa/getstarted?source=aws  # Command line instruction for creating openshift cluster

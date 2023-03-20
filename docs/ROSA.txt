@@ -1,1 +1,13 @@
 https://console.redhat.com/openshift/create/rosa/getstarted?source=aws  # Command line instruction for creating openshift cluster
+
+
+# Login red hat account
+rosa login
+# Verify quota of vCPU in aws 
+rosa verify quota or add --region=
+
+# Create account roles
+rosa create account-roles --mode auto # or without mode( step by step)
+
+# Create cluster( this is auto mode )
+rosa create cluster --cluster-name ukv --sts --mode auto

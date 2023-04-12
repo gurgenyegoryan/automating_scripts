@@ -1,0 +1,53 @@
+https://www.youtube.com/watch?v=_TDLAuUgk68
+https://www.digitalocean.com/community/tutorials/how-to-set-filesystem-quotas-on-ubuntu-20-04
+
+# Install quota
+sudo apt update
+sudo apt install quota
+
+# Check quota version
+quota --version
+
+#Check kernel modules 
+find /lib/modules/ -type f -name '*quota_v*.ko*'
+
+# if not output ` 
+sudo apt install linux-image-extra-virtual
+
+# Add in fstab
+sudo nano /etc/fstab
+like this ` /dev/disk/by-uuid/b0e116c3-7185-46e4-b504-601247e99173 /home ext4 defaults,usrjquota=aquota.user,grpjquota=aquota.group,jqfmt=vfsv0 0 1
+
+# Remount disk 
+sudo mount -o remount /home
+
+# Verify new options
+cat /proc/mounts | grep ' /home '
+
+# Output
+/dev/vda1 / ext4 rw,relatime,quota,usrquota,grpquota 0 0
+
+# Before finally turning on the quota system, you need to manually run the quotacheck command once:
+# This command creates the files /aquota.user and /aquota.group. These files contain information about 
+# the limits and usage of the filesystem, and they need to exist before you turn on quota monitoring. The quotacheck parameters used are:
+sudo quotacheck -ugm /home && ls /home
+
+# Add the quota modules to the Linux kernel
+sudo modprobe quota_v1 -S `uname -r`
+sudo modprobe quota_v2 -S `uname -r`
+
+# Turn on the quota system
+sudo quotaon -avug
+# Turn off the quota system
+sudo quotaoff -avug
+
+# Set quota on user
+sudo setquota -u user -F vfsv0 soft_limit hard_limit 0 0 /dev/nvme4n1p3
+# Edit quota 
+sudo edquota -u user
+
+# Set quota on group
+sudo setquota -g group -F vfsv0 soft_limit hard_limit 0 0 /dev/nvme4n1p3
+sudo edquota -g group
+
+

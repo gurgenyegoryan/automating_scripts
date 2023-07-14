@@ -10,9 +10,9 @@ kern_version_now=`uname -r`
 if [ "$kern_version_now" != "$kern_version" ]; then
     echo "Uninstall last installed Mellanox Drier..."
     cd /tmp &&
-    wget https://content.mellanox.com/ofed/MLNX_OFED-5.8-1.1.2.1/MLNX_OFED_LINUX-5.8-1.1.2.1-ubuntu22.04-x86_64.iso &&
+    wget wget https://content.mellanox.com/ofed/MLNX_OFED-23.04-1.1.3.0/MLNX_OFED_LINUX-23.04-1.1.3.0-ubuntu20.04-x86_64.iso &&
     mkdir -p mlnx &&
-    mount -o ro,loop MLNX_OFED_LINUX-5.8-1.1.2.1-ubuntu22.04-x86_64.iso ./mlnx &&
+    mount -o ro,loop MLNX_OFED-23.04-1.1.3.0/MLNX_OFED_LINUX-23.04-1.1.3.0-ubuntu20.04-x86_64.iso ./mlnx &&
     ./mlnx/uninstall.sh --force &&
     ./mlnx/mlnxofedinstall --without-dkms --add-kernel-support --kernel $(uname -r) --without-fw-update --force &&
     /etc/init.d/openibd restart

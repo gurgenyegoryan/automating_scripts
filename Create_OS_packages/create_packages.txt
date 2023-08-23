@@ -1,0 +1,9 @@
+# Linux
+# Create .deb package
+https://www.iodigital.com/en/history/intracto/creating-debianubuntu-deb-packages
+# macOS
+# Create brew package
+https://brew.sh/
+# Windows
+# Create chocolately package
+https://docs.chocolatey.org/en-us/create/create-packages#installation-paths

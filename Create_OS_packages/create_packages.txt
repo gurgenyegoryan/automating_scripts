@@ -7,3 +7,9 @@ https://brew.sh/
 # Windows
 # Create chocolately package
 https://docs.chocolatey.org/en-us/create/create-packages#installation-paths
+
+
+*.h files - include
+*.dll WIndows
+*.a Linux
+*.a macOS
